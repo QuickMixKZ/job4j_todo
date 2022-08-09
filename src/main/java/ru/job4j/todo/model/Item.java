@@ -15,6 +15,9 @@ public class Item {
     private String description;
     private LocalDateTime created;
     private boolean done;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     public Item() {
     }
@@ -36,6 +39,23 @@ public class Item {
         this.description = description;
         this.created = created;
         this.done = done;
+    }
+
+    public Item(int id, String name, String description, LocalDateTime created, boolean done, Account account) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.created = created;
+        this.done = done;
+        this.account = account;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public int getId() {
@@ -91,12 +111,13 @@ public class Item {
                 && done == item.done
                 && Objects.equals(name, item.name)
                 && Objects.equals(description, item.description)
-                && Objects.equals(created, item.created);
+                && Objects.equals(created, item.created)
+                && Objects.equals(account, item.account);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, created, done);
+        return Objects.hash(id, name, description, created, done, account);
     }
 
     @Override
@@ -107,6 +128,7 @@ public class Item {
                 + ", description='" + description + '\''
                 + ", created=" + created
                 + ", done=" + done
+                + ", account=" + account
                 + '}';
     }
 }

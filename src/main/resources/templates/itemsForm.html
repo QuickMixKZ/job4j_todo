@@ -48,6 +48,7 @@
             <th scope="col">Статус</th>
             <th scope="col">Название</th>
             <th datatype="date" scope="col">Дата создания</th>
+            <th scope="col">Пользователь</th>
         </tr>
         </thead>
         <tbody>
@@ -64,6 +65,7 @@
                 <a th:href="@{|/showItemForm/${item.id}|}" th:text="${item.name}"></a>
             </td>
             <td th:text="${#temporals.format(item.created, 'dd.MM.yyyy HH:mm')}"></td>
+            <td th:text="${item.account}"></td>
         </tr>
         </tbody>
     </table>

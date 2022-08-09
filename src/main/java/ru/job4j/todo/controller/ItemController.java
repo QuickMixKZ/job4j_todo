@@ -78,7 +78,8 @@ public class ItemController {
     }
 
     @PostMapping("addItem")
-    public String addItem(@ModelAttribute Item item) {
+    public String addItem(@ModelAttribute Item item, HttpSession session) {
+        item.setAccount((Account) session.getAttribute("account"));
         item.setCreated(LocalDateTime.now());
         service.addItem(item);
         return "redirect:/items";

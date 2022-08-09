@@ -12,3 +12,6 @@ CREATE TABLE IF NOT EXISTS account(
     login TEXT,
     password TEXT
 );
+
+ALTER TABLE item
+    ADD COLUMN account_id INT NOT NULL REFERENCES account(id);
