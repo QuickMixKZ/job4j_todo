@@ -29,6 +29,17 @@
                 <a class="nav-item nav-link" th:href="@{'/items' + '?status=done'}">Выполненные</a>
                 <a class="nav-item nav-link" th:href="@{'/items' + '?status=new'}">Новые</a>
             </div>
+            <div class="navbar-collapse collapse order-3 dual-collapse2">
+                <ul class="navbar-nav ml-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-item nav-link" th:href="@{/logout}">
+                            <span th:text="${account.name}"></span>
+                            <span> | Выйти</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
     <table class="table">

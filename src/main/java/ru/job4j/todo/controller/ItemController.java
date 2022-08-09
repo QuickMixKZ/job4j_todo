@@ -4,9 +4,11 @@ import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.model.Account;
 import ru.job4j.todo.model.Item;
 import ru.job4j.todo.service.ItemService;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,10 @@ public class ItemController {
     }
 
     @GetMapping("/items")
-    public String items(Model model, @RequestParam(defaultValue = "any", name = "status") String status) {
+    public String items(Model model,
+                        @RequestParam(defaultValue = "any", name = "status") String status,
+                        HttpSession session) {
+        setUserToModel(model, session);
         List<Item> items;
         if ("any".equals(status)) {
             items = service.findAll();
@@ -78,5 +83,10 @@ public class ItemController {
         item.setCreated(LocalDateTime.now());
         service.addItem(item);
         return "redirect:/items";
+    }
+
+    private void setUserToModel(Model model, HttpSession session) {
+        Account account = (Account) session.getAttribute("account");
+        model.addAttribute("account", account);
     }
 }
