@@ -55,7 +55,6 @@ public class ItemController {
 
     @PostMapping("/performItem")
     public String performItem(Model model, @ModelAttribute Item item) {
-        item.setDone(true);
         service.performItem(item);
         return String.format("redirect:/showItemForm/%s", item.getId());
     }
