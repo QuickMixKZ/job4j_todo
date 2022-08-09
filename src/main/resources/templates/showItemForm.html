@@ -29,8 +29,8 @@
             <label for="name">Название</label>
             <input readonly class="form-control" id="name" name="name" th:field="*{name}" type="text">
             <label for="description">Описание</label>
-            <input readonly class="form-control" id="description" name="description" th:field="*{description}"
-                   type="text">
+            <textarea readonly class="form-control" id="description" name="description" th:field="*{description}"
+                      type="text"></textarea>
             <label for="created">Дата создания</label>
             <input readonly class="form-control" id="created" name="created" th:field="*{created}" type="text">
             <div class="form-check">

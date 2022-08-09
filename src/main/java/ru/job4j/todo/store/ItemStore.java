@@ -8,6 +8,7 @@ import ru.job4j.todo.model.Item;
 
 import javax.persistence.Query;
 import java.util.List;
+import java.util.function.Function;
 
 @Repository
 public class ItemStore {
@@ -19,73 +20,78 @@ public class ItemStore {
     }
 
     public List<Item> findAll() {
-        Session session = sf.openSession();
-        Query query = session.createQuery("from Item");
-        List<Item> result = query.getResultList();
-        session.close();
-        return result;
+        return this.tx(session -> session.createQuery("from Item").list());
     }
 
     public Item findById(int id) {
-        Session session = sf.openSession();
-        Query query = session.createQuery("from Item  where id = :fId");
-        query.setParameter("fId", id);
-        Item result = (Item) query.getSingleResult();
-        session.close();
-        return result;
+        return this.tx(session -> {
+            Query query = session.createQuery("from Item  where id = :fId");
+            query.setParameter("fId", id);
+            Item result = (Item) query.getSingleResult();
+            return result;
+        });
     }
 
     public void updateItem(Item item) {
-        Session session = sf.openSession();
-        Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("update Item "
-                + "set name = :newName, "
-                + "description = :newDescription, "
-                + "done = :newDone "
-                + "where id = :fId");
-        query.setParameter("newName", item.getName());
-        query.setParameter("newDescription", item.getDescription());
-        query.setParameter("newDone", item.isDone());
-        query.setParameter("fId", item.getId());
-        query.executeUpdate();
-        transaction.commit();
-        session.close();
+        this.tx(session -> {
+            Query query = session.createQuery("update Item "
+                    + "set name = :newName, "
+                    + "description = :newDescription, "
+                    + "done = :newDone "
+                    + "where id = :fId");
+            query.setParameter("newName", item.getName());
+            query.setParameter("newDescription", item.getDescription());
+            query.setParameter("newDone", item.isDone());
+            query.setParameter("fId", item.getId());
+            return query.executeUpdate() > 0;
+        });
     }
 
     public void deleteItem(Item item) {
-        Session session = sf.openSession();
-        Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("delete from Item where id = :fId");
-        query.setParameter("fId", item.getId());
-        query.executeUpdate();
-        transaction.commit();
-        session.close();
+        this.tx(session -> {
+            Query query = session.createQuery("delete from Item where id = :fId");
+            query.setParameter("fId", item.getId());
+            return query.executeUpdate() > 0;
+        });
     }
 
     public void addItem(Item item) {
-        Session session = sf.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(item);
-        transaction.commit();
-        session.close();
+        this.tx(session -> {
+            session.save(item);
+            return true;
+        });
     }
 
     public List<Item> findByStatus(Boolean done) {
-        Session session = sf.openSession();
-        Query query = session.createQuery("from Item where done = :fIsDone");
-        query.setParameter("fIsDone", done);
-        List<Item> result = query.getResultList();
-        session.close();
-        return result;
+        return this.tx(session -> {
+            Query query = session.createQuery("from Item where done = :fIsDone");
+            query.setParameter("fIsDone", done);
+            List<Item> result = query.getResultList();
+            return result;
+        });
     }
 
     public void performItem(Item item) {
-        Session session = sf.openSession();
-        Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("UPDATE  Item set done = true WHERE id = :fId");
-        query.setParameter("fId", item.getId());
-        query.executeUpdate();
-        transaction.commit();
-        session.close();
+        this.tx(session -> {
+            Query query = session.createQuery("UPDATE  Item set done = true WHERE id = :fId");
+            query.setParameter("fId", item.getId());
+            return query.executeUpdate() > 0;
+        });
+    }
+
+
+    private <T> T tx(final Function<Session, T> command) {
+        final Session session = sf.openSession();
+        final Transaction tx = session.beginTransaction();
+        try {
+            T rsl = command.apply(session);
+            tx.commit();
+            return rsl;
+        } catch (final Exception e) {
+            session.getTransaction().rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
     }
 }
