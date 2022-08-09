@@ -35,6 +35,10 @@ public class ItemService {
         store.addItem(item);
     }
 
+    public void performItem(Item item) {
+        store.performItem(item);
+    }
+
     public List<Item> findByStatus(Boolean done) {
         return store.findByStatus(done);
     }
