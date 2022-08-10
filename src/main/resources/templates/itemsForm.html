@@ -65,7 +65,7 @@
                 <a th:href="@{|/showItemForm/${item.id}|}" th:text="${item.name}"></a>
             </td>
             <td th:text="${#temporals.format(item.created, 'dd.MM.yyyy HH:mm')}"></td>
-            <td th:text="${item.account}"></td>
+            <td th:text="${item.account.name}"></td>
         </tr>
         </tbody>
     </table>
