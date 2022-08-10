@@ -41,15 +41,14 @@ public class AccountStore {
     public Optional<Account> findByLoginAndPwd(Account account) {
         Optional<Account> result = Optional.empty();
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("from Account where login = :fLogin and password = :fPassword");
-        query.setParameter("fLogin", account.getLogin());
-        query.setParameter("fPassword", account.getPassword());
         try {
-            result = Optional.of((Account) query.getSingleResult());
+            result =  session.createQuery("from Account where login = :fLogin and password = :fPassword")
+                    .setParameter("fLogin", account.getLogin())
+                    .setParameter("fPassword", account.getPassword())
+                    .uniqueResultOptional();
         } catch (Exception e) {
             LOG.error("Exception in AccountStore", e);
         }
-
         session.close();
         return result;
     }
