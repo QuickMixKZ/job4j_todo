@@ -2,7 +2,7 @@ package ru.job4j.todo.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "item")
@@ -18,6 +18,9 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    List<Category> categories = new ArrayList<>();
 
     public Item() {
     }
@@ -48,6 +51,28 @@ public class Item {
         this.created = created;
         this.done = done;
         this.account = account;
+    }
+
+    public Item(int id, String name, String description, LocalDateTime created, boolean done, Account account, List<Category> categories) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.created = created;
+        this.done = done;
+        this.account = account;
+        this.categories = categories;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
     }
 
     public Account getAccount() {

@@ -5,21 +5,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Account;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Item;
+import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.ItemService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
 public class ItemController {
 
     private final ItemService service;
+    private final CategoryService categoryService;
 
-    public ItemController(ItemService service) {
+    public ItemController(ItemService service, CategoryService categoryService) {
         this.service = service;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/items")
@@ -43,7 +49,18 @@ public class ItemController {
     }
 
     @PostMapping("/editItemForm")
-    public String editItem(Model model, @ModelAttribute Item item) {
+    public String editItem(Model model,
+                           @ModelAttribute Item item,
+                           HttpServletRequest request) {
+        String[] categoriesId = request.getParameterValues("category_hidden");
+        HashMap<Category, Boolean> categoriesMap = new HashMap<>();
+        for (String sId : categoriesId) {
+            categoriesMap.put(categoryService.findById(Integer.parseInt(sId)), true);
+        }
+        for (Category category : categoryService.getAll()) {
+            categoriesMap.putIfAbsent(category, false);
+        }
+        model.addAttribute("categoriesMap", categoriesMap);
         return "editItemForm";
     }
 
@@ -60,7 +77,11 @@ public class ItemController {
     }
 
     @PostMapping("/updateItem")
-    public String updateItem(@ModelAttribute Item item) {
+    public String updateItem(@ModelAttribute Item item, HttpServletRequest request) {
+        String[] categories = request.getParameterValues("category");
+        for (String sId : categories) {
+            item.addCategory(categoryService.findById(Integer.parseInt(sId)));
+        }
         service.updateItem(item);
         return String.format("redirect:/showItemForm/%s", item.getId());
     }
@@ -74,13 +95,20 @@ public class ItemController {
     @GetMapping("/addItemForm")
     public String addItemForm(Model model) {
         model.addAttribute("item", new Item());
+        model.addAttribute("categories", categoryService.getAll());
         return "addItemForm";
     }
 
     @PostMapping("addItem")
-    public String addItem(@ModelAttribute Item item, HttpSession session) {
+    public String addItem(@ModelAttribute Item item,
+                          HttpSession session,
+                          HttpServletRequest request) {
         item.setAccount((Account) session.getAttribute("account"));
         item.setCreated(LocalDateTime.now());
+        String[] categories = request.getParameterValues("category");
+        for (String sId : categories) {
+            item.addCategory(categoryService.findById(Integer.parseInt(sId)));
+        }
         service.addItem(item);
         return "redirect:/items";
     }

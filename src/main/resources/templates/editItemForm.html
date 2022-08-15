@@ -37,6 +37,13 @@
                 <input class="form-check-input" id="done" name="done" th:field="*{done}" type="checkbox">
                 <label class="form-check-label" for="done">Выполнено</label>
             </div>
+            <div class="form-group">
+                <label for="category">Категория</label>
+                <select class="form-select" id="category" multiple="multiple" name="category">
+                    <option  th:selected="${mapEntry.value}" th:each="mapEntry : ${categoriesMap}" th:text="${mapEntry.key.name}"
+                            th:value="${mapEntry.key.id}"></option>
+                </select>
+            </div>
         </div>
         <button class="btn btn-success" name="perform" type="submit">Сохранить</button>
         <a th:href="@{|/items|}" class="btn btn-link">К списку задач</a>

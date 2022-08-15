@@ -18,6 +18,8 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
     <title>TODO List</title>
 </head>
 <body>
@@ -27,13 +29,20 @@
         <input name="id" th:field="*{id}" type="hidden"/>
         <div class="form-group">
             <label for="name">Название</label>
-            <input required class="form-control" id="name" name="name" th:field="*{name}" type="text">
+            <input class="form-control" id="name" name="name" required th:field="*{name}" type="text">
             <label for="description">Описание</label>
-            <textarea required class="form-control" id="description" name="description" th:field="*{description}"
+            <textarea class="form-control" id="description" name="description" required th:field="*{description}"
                       type="text"></textarea>
+            <div class="form-group">
+                <label for="category">Категория</label>
+                <select required class="form-select" id="category" multiple="multiple" name="category">
+                    <option th:each="category : ${categories}" th:text="${category.name}"
+                            th:value="${category.id}"></option>
+                </select>
+            </div>
         </div>
         <button class="btn btn-success" name="perform" type="submit">Сохранить</button>
-        <a th:href="@{|/items|}" class="btn btn-link">К списку задач</a>
+        <a class="btn btn-link" th:href="@{|/items|}">К списку задач</a>
     </form>
 </div>
 </body>

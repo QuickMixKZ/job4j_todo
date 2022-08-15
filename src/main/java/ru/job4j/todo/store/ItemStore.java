@@ -25,7 +25,7 @@ public class ItemStore {
 
     public Item findById(int id) {
         return this.tx(session -> {
-            Query query = session.createQuery("from Item  where id = :fId");
+            Query query = session.createQuery("from Item i join fetch i.categories c where i.id = :fId");
             query.setParameter("fId", id);
             Item result = (Item) query.getSingleResult();
             return result;
@@ -34,16 +34,8 @@ public class ItemStore {
 
     public void updateItem(Item item) {
         this.tx(session -> {
-            Query query = session.createQuery("update Item "
-                    + "set name = :newName, "
-                    + "description = :newDescription, "
-                    + "done = :newDone "
-                    + "where id = :fId");
-            query.setParameter("newName", item.getName());
-            query.setParameter("newDescription", item.getDescription());
-            query.setParameter("newDone", item.isDone());
-            query.setParameter("fId", item.getId());
-            return query.executeUpdate() > 0;
+            session.saveOrUpdate(item);
+            return true;
         });
     }
 

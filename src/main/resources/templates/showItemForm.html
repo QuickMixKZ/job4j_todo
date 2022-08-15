@@ -27,21 +27,33 @@
         <input name="id" th:field="*{id}" type="hidden"/>
         <div class="form-group">
             <label for="name">Название</label>
-            <input readonly class="form-control" id="name" name="name" th:field="*{name}" type="text">
+            <input class="form-control" id="name" name="name" readonly th:field="*{name}" type="text">
             <label for="description">Описание</label>
-            <textarea readonly class="form-control" id="description" name="description" th:field="*{description}"
+            <textarea class="form-control" id="description" name="description" readonly th:field="*{description}"
                       type="text"></textarea>
             <label for="created">Дата создания</label>
-            <input readonly class="form-control" id="created" name="created" th:field="*{created}" type="text">
+            <input class="form-control" id="created" name="created" readonly th:field="*{created}" type="text">
             <div class="form-check">
-                <input onclick="return false;" class="form-check-input" id="done" name="done" th:field="*{done}" type="checkbox">
+                <input class="form-check-input" id="done" name="done" onclick="return false;" th:field="*{done}"
+                       type="checkbox">
                 <label class="form-check-label" for="done">Выполнено</label>
             </div>
         </div>
-        <button th:disabled="${item.done}" class="btn btn-success" name="done_" type="submit">Выполнено</button>
-        <button class="btn btn-secondary" name="edit" th:formaction="'/editItemForm/'" type="submit">Редактировать</button>
+        <div class="form-group">
+            <label for="category">Категория</label>
+            <select class="form-select" id="category" multiple name="category">
+                <option disabled selected th:each="category : ${item.categories}"
+                        th:text="${category.name}" th:value="${category.id}"></option>
+            </select>
+            <select hidden class="form-select" id="category_hidden" multiple name="category_hidden">
+                <option selected th:each="category : ${item.categories}"
+                        th:text="${category.name}" th:value="${category.id}"></option>
+            </select>
+        </div>
+        <button class="btn btn-success" name="done_" th:disabled="${item.done}" type="submit">Выполнено</button>
+        <button class="btn btn-secondary" th:formaction="'/editItemForm/'">Редактировать</button>
         <button class="btn btn-danger" name="edit" th:formaction="'/deleteItem/'" type="submit">Удалить</button>
-        <a th:href="@{|/items|}" class="btn btn-link">Назад</a>
+        <a class="btn btn-link" th:href="@{|/items|}">Назад</a>
     </form>
 </div>
 </body>
