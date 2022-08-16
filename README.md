@@ -10,24 +10,31 @@
 - PostgreSql
 
 Функциональные возможности приложения:
+ - Страница входа:
+    - Вход
+    - Переход к регистрации
+ 
+![login_page](src/main/resources/screenshots/login.png)
+
  - Главная страница:
     - Список добавленных задач.
     - Фильтрация задач - отображение всех задач, только выполенных, и только новых.
     - Кнопка для добавления новых задач.
 
-![main page](https://i.postimg.cc/cHzV50MY/Main-page.png)
+![main page](src/main/resources/screenshots/tasks.png)
  
    - Страница добавления задачи:
+        - Выбор одной или нескольких категорий.
 
-![add task](https://i.postimg.cc/J0ZMNsVt/add-task.png)
+![add task](src/main/resources/screenshots/add_task.png)
 
    - Страница с описанием задачи:
       - Кнопка для пометки задачи выполненной.
       - Кнопка редактирования задачи.
       - Кнопка удаления задачи.
 
-![task info](https://i.postimg.cc/nrbthnjx/task-info.png)
+![task info](src/main/resources/screenshots/task_info.png)
 
    - Страница редактирования задачи:
 
-![edit task](https://i.postimg.cc/FzgwF3Xb/edit-task.png)
+![edit task](src/main/resources/screenshots/edit_task.png)

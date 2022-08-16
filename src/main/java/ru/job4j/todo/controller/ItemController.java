@@ -1,6 +1,5 @@
 package ru.job4j.todo.controller;
 
-import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,6 @@ import ru.job4j.todo.service.ItemService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -103,8 +101,8 @@ public class ItemController {
     public String addItem(@ModelAttribute Item item,
                           HttpSession session,
                           HttpServletRequest request) {
-        item.setAccount((Account) session.getAttribute("account"));
         item.setCreated(LocalDateTime.now());
+        item.setAccount((Account) session.getAttribute("account"));
         String[] categories = request.getParameterValues("category");
         for (String sId : categories) {
             item.addCategory(categoryService.findById(Integer.parseInt(sId)));

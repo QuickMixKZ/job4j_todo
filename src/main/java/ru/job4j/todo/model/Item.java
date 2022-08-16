@@ -20,7 +20,7 @@ public class Item {
     private Account account;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    List<Category> categories = new ArrayList<>();
+    private Set<Category> categories = new HashSet<>();
 
     public Item() {
     }
@@ -53,7 +53,7 @@ public class Item {
         this.account = account;
     }
 
-    public Item(int id, String name, String description, LocalDateTime created, boolean done, Account account, List<Category> categories) {
+    public Item(int id, String name, String description, LocalDateTime created, boolean done, Account account, Set<Category> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -63,11 +63,11 @@ public class Item {
         this.categories = categories;
     }
 
-    public List<Category> getCategories() {
+    public Set<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
 
